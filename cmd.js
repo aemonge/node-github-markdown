@@ -11,6 +11,7 @@ const getStdin = require('get-stdin');
 const ghmd = require('.');
 
 const fsP = pify(fs);
+let title = 'Markdown Built with github-markdown';
 const argv = minimist(process.argv.slice(2), {
   alias: {
     d: 'dest',
@@ -28,11 +29,15 @@ if (argv.v || argv.version) {
   process.exit();
 }
 
+if (argv.title && typeof argv.title === 'string') {
+  title = argv.title;
+}
+
 
 if (argv.stdin) {
   getStdin().then(string => {
     process.stdout.write(ghmd(string, {
-      template: argv.template
+      template: argv.template, title
     }));
   });
 } else {
@@ -49,6 +54,6 @@ if (argv.stdin) {
 function convert(input, template, output) {
   return fsP.readFile(input)
     .then(buffer => buffer.toString())
-    .then(markdown => ghmd(markdown, {template}))
+    .then(markdown => ghmd(markdown, {template, title}))
     .then(html => fsP.writeFile(output, html));
 }
