@@ -33,7 +33,6 @@ if (argv.title && typeof argv.title === 'string') {
   title = argv.title;
 }
 
-
 if (argv.stdin) {
   getStdin().then(string => {
     process.stdout.write(ghmd(string, {
